@@ -5,10 +5,10 @@ import Timeline from "./Timeline";
 import Closing from "./Closing";
 
 export default function MainContent({ visible }) {
-  // Auto-scroll: starts after open, pauses on user interaction
   useEffect(() => {
     if (!visible) return;
-    const SPEED = 0.45;
+    const SPEED = 0.6;
+    const RESUME_AFTER = 1200; // ms after user scroll stops
     let raf;
     let lastUser = 0;
     let userTouched = false;
@@ -19,13 +19,13 @@ export default function MainContent({ visible }) {
     window.addEventListener("keydown", onUser);
 
     const step = () => {
-      const paused = userTouched && Date.now() - lastUser < 4000;
+      const paused = userTouched && Date.now() - lastUser < RESUME_AFTER;
       const atBottom = window.scrollY + window.innerHeight >= document.body.scrollHeight - 2;
       if (!paused && !atBottom) window.scrollBy(0, SPEED);
       if (!atBottom) raf = requestAnimationFrame(step);
     };
-    // Small delay before starting scroll so letter can render
-    const t = setTimeout(() => { raf = requestAnimationFrame(step); }, 600);
+
+    const t = setTimeout(() => { raf = requestAnimationFrame(step); }, 500);
 
     return () => {
       clearTimeout(t);
@@ -43,7 +43,7 @@ export default function MainContent({ visible }) {
           key="content"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.15 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
         >
           <Letter />
           <SectionDivider label="The Story So Far" />
@@ -71,8 +71,14 @@ function Footer() {
   return (
     <footer style={styles.footer}>
       <p style={styles.footerText}>Made with love by your child ♡</p>
-      <p style={{ ...styles.footerText, ...styles.easter }}>
+      <p style={styles.footerText}>
         PS — thank you for giving me a childhood full of love. I notice every single thing.
+      </p>
+      <p style={styles.footerText}>
+        
+      </p>
+      <p style={styles.footerText}>
+         - PriyanShirom
       </p>
     </footer>
   );
@@ -84,5 +90,4 @@ const styles = {
   label: { fontSize: ".68rem", letterSpacing: "0.4em", textTransform: "uppercase", color: "#b8a898" },
   footer: { padding: "2.5rem 2rem", textAlign: "center", borderTop: "1px solid rgba(43,33,24,.07)", background: "#faf6f1" },
   footerText: { fontSize: ".7rem", letterSpacing: "0.12em", color: "#b8a898", marginTop: ".4rem" },
-  easter: { opacity: 0.0, transition: "opacity 1s" },
 };
