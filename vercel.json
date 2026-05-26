@@ -1,5 +1,5 @@
 {
-  "installCommand": "npm install",
-  "buildCommand": "npx vite build",
+  "installCommand": "npm install --ignore-scripts && chmod -R 755 node_modules/.bin",
+  "buildCommand": "node_modules/.bin/vite build",
   "outputDirectory": "dist"
 }
